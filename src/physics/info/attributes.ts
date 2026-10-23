@@ -1,6 +1,6 @@
 
-type Modifier = {uuid: string, operation: number /*there are others besides 0|1|2 */, amount: number}
-type Attribute = {value: number, modifiers: Modifier[]}
+export type Modifier = {uuid: string, operation: number /*there are others besides 0|1|2 */, amount: number}
+export type Attribute = {value: number, modifiers: Modifier[]}
 
 
 /**
@@ -10,16 +10,16 @@ type Attribute = {value: number, modifiers: Modifier[]}
  */
 export function getAttributeValue(prop: Attribute): number {
     let x = prop.value;
-    for (const mod of prop.modifiers) {
+    for (const mod of prop.modifiers ?? []) {
         if (mod.operation !== 0) continue;
         x += mod.amount;
     }
     let y = x;
-    for (const mod of prop.modifiers) {
+    for (const mod of prop.modifiers ?? []) {
         if (mod.operation !== 1) continue;
         y += x * mod.amount;
     }
-    for (const mod of prop.modifiers) {
+    for (const mod of prop.modifiers ?? []) {
         if (mod.operation !== 2) continue;
         y *= 1.0 + mod.amount;
     }
@@ -28,7 +28,7 @@ export function getAttributeValue(prop: Attribute): number {
 
 /** Copy whose modifier list can be edited without touching the original. */
 export function copyAttributeValue(prop: Attribute): Attribute {
-    return { value: prop.value, modifiers: prop.modifiers.slice() };
+    return { value: prop.value, modifiers: prop.modifiers?.slice() ?? [] };
 }
 
 export function createAttributeValue(base: any): Attribute {
